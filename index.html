@@ -33,7 +33,10 @@
 
   <!-- Critical CSS — inlined for instant first paint -->
   <style>
-    :root{--green-dark:#1a3a0a;--green-primary:#2d5016;--green-medium:#4a7c28;--green-light:#7cb342;--green-pale:#c5e1a5;--green-bg:#f1f8e9;--navy:#3b4559;--navy-dark:#2d3545;--navy-light:#4f5b73;--cream:#fefdf8;--white:#fff;--text-dark:#1a1a1a;--text-body:#3d3d3d;--text-muted:#6b6b6b;--shadow-sm:0 2px 8px rgba(0,0,0,.06);--shadow-md:0 4px 20px rgba(0,0,0,.08);--shadow-lg:0 8px 40px rgba(0,0,0,.12);--radius-sm:8px;--radius-md:12px;--radius-lg:20px;--radius-full:50px;--transition:.3s cubic-bezier(.4,0,.2,1);--font-heading:'DM Serif Display',Georgia,serif;--font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--max-width:1200px}
+    /* FIX 3: Font metric overrides — prevent CLS when web fonts swap in */
+    @font-face{font-family:'Inter Fallback';ascent-override:90.20%;descent-override:22.48%;line-gap-override:0%;size-adjust:107.40%;src:local('Arial')}
+    @font-face{font-family:'DM Serif Display Fallback';ascent-override:90%;descent-override:20%;line-gap-override:0%;size-adjust:100%;src:local('Georgia')}
+    :root{--green-dark:#1a3a0a;--green-primary:#2d5016;--green-medium:#4a7c28;--green-light:#7cb342;--green-pale:#c5e1a5;--green-bg:#f1f8e9;--navy:#3b4559;--navy-dark:#2d3545;--navy-light:#4f5b73;--cream:#fefdf8;--white:#fff;--text-dark:#1a1a1a;--text-body:#3d3d3d;--text-muted:#6b6b6b;--shadow-sm:0 2px 8px rgba(0,0,0,.06);--shadow-md:0 4px 20px rgba(0,0,0,.08);--shadow-lg:0 8px 40px rgba(0,0,0,.12);--radius-sm:8px;--radius-md:12px;--radius-lg:20px;--radius-full:50px;--transition:.3s cubic-bezier(.4,0,.2,1);--font-heading:'DM Serif Display','DM Serif Display Fallback',Georgia,serif;--font-body:'Inter','Inter Fallback',-apple-system,BlinkMacSystemFont,sans-serif;--max-width:1200px}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;font-size:16px}
     body{font-family:var(--font-body);color:var(--text-body);background:var(--cream);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -58,7 +61,15 @@
     .btn-primary{background:var(--green-primary);color:var(--white);box-shadow:0 4px 16px rgba(45,80,22,.3)}
     .btn-secondary{background:transparent;color:var(--navy);border:2px solid var(--navy)}
     .hero{position:relative;padding:72px 0 88px;background:linear-gradient(160deg,var(--green-bg) 0%,var(--cream) 50%,#e8f5e9 100%);overflow:hidden}
+    /* FIX 1: Include ::before in critical CSS so it's painted on first frame — prevents 0.295 CLS */
+    .hero::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(124,179,66,.12) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+    .hero h1 .highlight::after{content:'';position:absolute;bottom:4px;left:0;width:100%;height:8px;background:var(--green-pale);opacity:.5;z-index:-1;border-radius:4px}
     .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    /* FIX 2: Showcase grid in critical CSS so browser reserves correct 16/10 space immediately */
+    .image-showcase{overflow:hidden}
+    .showcase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+    .showcase-item{aspect-ratio:16/10;overflow:hidden}
+    .showcase-item img{width:100%;height:100%;object-fit:cover}
     .hero-content{position:relative;z-index:2}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--white);padding:8px 16px;border-radius:var(--radius-full);font-size:.82rem;font-weight:600;color:var(--green-primary);box-shadow:var(--shadow-sm);margin-bottom:20px}
     .hero-badge .pulse{width:8px;height:8px;background:var(--green-light);border-radius:50%;animation:pulse 2s ease-in-out infinite}
@@ -212,7 +223,7 @@
         <div class="hero-image-wrapper">
           <picture>
             <source srcset="assets/images/bread-with-egg-and-leaf.webp" type="image/webp">
-            <img src="assets/images/bread-with-egg-and-leaf.jpg" alt="Avocado toast topped with fresh microgreens and soft-boiled eggs" width="480" height="480" fetchpriority="high">
+            <img src="assets/images/bread-with-egg-and-leaf.jpg" alt="Avocado toast topped with fresh microgreens and soft-boiled eggs" width="480" height="640" fetchpriority="high">
           </picture>
         </div>
 
@@ -394,25 +405,25 @@
       <div class="showcase-item">
         <picture>
           <source srcset="assets/images/food-on-a-plate-with-chicken-breast.webp" type="image/webp">
-          <img src="assets/images/food-on-a-plate-with-chicken-breast.jpg" alt="Gourmet dish with microgreens on a dark plate" loading="lazy" width="800" height="800" decoding="async">
+          <img src="assets/images/food-on-a-plate-with-chicken-breast.jpg" alt="Gourmet dish with microgreens on a dark plate" loading="lazy" width="480" height="300" decoding="async">
         </picture>
       </div>
       <div class="showcase-item">
         <picture>
           <source srcset="assets/images/green-leaves.webp" type="image/webp">
-          <img src="assets/images/green-leaves.jpg" alt="Freshly harvested microgreens" loading="lazy" width="400" height="400" decoding="async">
+          <img src="assets/images/green-leaves.jpg" alt="Freshly harvested microgreens" loading="lazy" width="480" height="300" decoding="async">
         </picture>
       </div>
       <div class="showcase-item">
         <picture>
           <source srcset="assets/images/bread-with-egg-and-leaf.webp" type="image/webp">
-          <img src="assets/images/bread-with-egg-and-leaf.jpg" alt="Microgreens on avocado toast" loading="lazy" width="480" height="480" decoding="async">
+          <img src="assets/images/bread-with-egg-and-leaf.jpg" alt="Microgreens on avocado toast" loading="lazy" width="480" height="300" decoding="async">
         </picture>
       </div>
       <div class="showcase-item">
         <picture>
           <source srcset="assets/images/MIX-BLEND.webp" type="image/webp">
-          <img src="assets/images/MIX-BLEND.jpg" alt="Mix blend bowl" loading="lazy" width="400" height="400" decoding="async">
+          <img src="assets/images/MIX-BLEND.jpg" alt="Mix blend bowl" loading="lazy" width="480" height="300" decoding="async">
         </picture>
       </div>
     </div>

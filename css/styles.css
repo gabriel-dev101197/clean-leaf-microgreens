@@ -28,8 +28,8 @@
   --radius-lg: 20px;
   --radius-full: 50px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font-heading: 'DM Serif Display', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'DM Serif Display', 'DM Serif Display Fallback', Georgia, serif;
+  --font-body: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
   --max-width: 1200px;
 }
 
