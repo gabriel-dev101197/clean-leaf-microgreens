@@ -920,7 +920,7 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.4rem); }
 /* --- Nutrition Banner --- */
 .nutrition-banner {
   padding: 88px 0;
-  background: url('../assets/images/leaf-with-roots.jpg') center/cover no-repeat fixed;
+  background: url('../assets/images/leaf-with-roots.webp') center/cover no-repeat fixed;
   color: var(--white);
   position: relative;
   overflow: hidden;
